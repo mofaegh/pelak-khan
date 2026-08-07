@@ -1,0 +1,20 @@
+﻿project:
+  name: pelak-khan
+  version: 0.1.0
+
+datasets:
+  root_env: PELAK_DATASET_ROOT
+
+  expected:
+    - hezarai_persian_plate_ocr
+    - imlp
+    - iranis
+    - ir_lpr
+    - ir_lpr_corners
+    - sivd
+
+artifacts:
+  root: artifacts
+
+models:
+  root: models
