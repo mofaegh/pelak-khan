@@ -1,0 +1,48 @@
+name: Bug report
+description: Report a reproducible problem in Pelak-Khan
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to report a bug. Remove private plate data, credentials, and sensitive media before posting.
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      placeholder: v0.5.0 or commit hash
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: Windows 11, Portable build / source install, CPU/GPU
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Provide the smallest reproducible sequence of steps.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Remove secrets and personal data before posting.
+      render: shell
