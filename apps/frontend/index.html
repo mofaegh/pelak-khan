@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <meta name="description" content="Pelak-Khan — سامانه محلی تشخیص و مدیریت پلاک خودرو" />
+  <title>Pelak-Khan | پلاک‌خوان</title>
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="ناوبری اصلی">
+      <div class="brand">
+        <img src="/static/icon.svg" alt="" class="brand-icon" />
+        <div>
+          <strong>Pelak-Khan</strong>
+          <span>سامانه پلاک‌خوان</span>
+        </div>
+      </div>
+
+      <nav class="nav-list">
+        <button class="nav-item active" data-view="dashboard" type="button">
+          <span class="nav-icon">⌂</span><span>داشبورد</span>
+        </button>
+        <button class="nav-item" data-view="recognize" type="button">
+          <span class="nav-icon">◎</span><span>تشخیص پلاک</span>
+        </button>
+        <button class="nav-item" data-view="video" type="button">
+          <span class="nav-icon">▶</span><span>ویدیو</span>
+        </button>
+        <button class="nav-item" data-view="history" type="button">
+          <span class="nav-icon">↺</span><span>سوابق</span>
+        </button>
+        <button class="nav-item" data-view="search" type="button">
+          <span class="nav-icon">⌕</span><span>جستجو</span>
+        </button>
+        <button class="nav-item" data-view="settings" type="button">
+          <span class="nav-icon">⚙</span><span>تنظیمات</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <a class="github-card" href="https://github.com/mofaegh/pelak-khan" target="_blank" rel="noopener noreferrer" aria-label="مشاهده سورس Pelak-Khan در GitHub">
+          <span class="github-mark" aria-hidden="true">GH</span>
+          <span class="github-copy">
+            <strong>@mofaegh</strong>
+            <small>GitHub · Pelak-Khan ↗</small>
+          </span>
+        </a>
+        <div class="sidebar-footer">
+          <div class="status-dot" id="sidebarStatusDot"></div>
+          <div>
+            <strong id="sidebarStatusText">در حال بررسی...</strong>
+            <span>Backend محلی</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="pageEyebrow">نمای کلی سیستم</p>
+          <h1 id="pageTitle">داشبورد</h1>
+        </div>
+        <div class="top-actions">
+          <a class="icon-btn" href="/docs" target="_blank" rel="noreferrer" title="API Docs">API</a>
+          <button class="primary small" type="button" data-go-recognize>+ تشخیص جدید</button>
+        </div>
+      </header>
+
+      <section class="view active" id="view-dashboard">
+        <div class="stats-grid">
+          <article class="stat-card">
+            <span class="stat-label">پلاک‌های یکتا</span>
+            <strong class="stat-value" id="statUnique">—</strong>
+            <span class="stat-caption">ثبت‌شده در دیتابیس</span>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">رویدادهای تشخیص</span>
+            <strong class="stat-value" id="statDetections">—</strong>
+            <span class="stat-caption">تشخیص‌های پذیرفته‌شده</span>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">آخرین فعالیت</span>
+            <strong class="stat-value compact" id="statLatest">—</strong>
+            <span class="stat-caption">آخرین ثبت موفق</span>
+          </article>
+          <article class="stat-card health-card">
+            <span class="stat-label">وضعیت مدل‌ها</span>
+            <strong class="stat-value compact" id="statHealth">در حال بررسی</strong>
+            <span class="stat-caption" id="statDevice">Runtime</span>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="panel hero-panel">
+            <div class="panel-copy">
+              <span class="badge">ALPR Core v0.3</span>
+              <h2>تشخیص پلاک ایرانی، مستقیم در مرورگر</h2>
+              <p>تصویر را آپلود کن یا دوربین را روی حالت زنده بگذار؛ پلاک، شهر/استان، تصویر حاشیه‌گذاری‌شده و سابقه ثبت‌شده را همان لحظه ببین.</p>
+              <button class="primary" type="button" data-go-recognize>شروع تشخیص</button>
+            </div>
+            <div class="plate-visual" aria-hidden="true">
+              <div class="mini-flag"><i></i><i></i><i></i></div>
+              <span class="plate-number">18</span>
+              <span class="plate-letter">ق</span>
+              <span class="plate-number">267</span>
+              <span class="plate-separator"></span>
+              <span class="plate-number">44</span>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div><p class="eyebrow">فعالیت اخیر</p><h2>آخرین تشخیص‌ها</h2></div>
+              <button class="text-btn" data-view-link="history" type="button">مشاهده همه</button>
+            </div>
+            <div class="list" id="recentList"><div class="empty-state">در حال دریافت اطلاعات...</div></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-recognize">
+        <div class="recognize-layout">
+          <article class="panel capture-panel">
+            <div class="panel-header">
+              <div><p class="eyebrow">ورودی تصویر</p><h2>تصویر خودرو</h2></div>
+              <span class="badge subtle">JPG / PNG / WEBP</span>
+            </div>
+
+            <div class="source-tabs" role="tablist">
+              <button type="button" class="source-tab active" data-source="upload">آپلود تصویر</button>
+              <button type="button" class="source-tab" data-source="camera">وبکم / دوربین</button>
+            </div>
+
+            <div class="source-pane active" id="source-upload">
+              <label class="drop-zone" id="dropZone">
+                <input id="imageInput" type="file" accept="image/*" hidden />
+                <span class="upload-mark">↑</span>
+                <strong>تصویر را اینجا رها کن</strong>
+                <span>یا برای انتخاب فایل کلیک کن</span>
+                <small>حداکثر حجم بر اساس تنظیم Backend</small>
+              </label>
+            </div>
+
+            <div class="source-pane" id="source-camera">
+              <div class="camera-box">
+                <video id="cameraVideo" playsinline autoplay muted></video>
+                <canvas id="cameraOverlay" class="camera-overlay"></canvas>
+                <div class="camera-placeholder" id="cameraPlaceholder">
+                  <span>◉</span>
+                  <strong>دوربین هنوز فعال نشده</strong>
+                  <small>برای شروع اجازه دسترسی به Camera را بده.</small>
+                </div>
+              </div>
+              <div class="camera-actions">
+                <button type="button" class="secondary" id="startCameraBtn">فعال‌سازی دوربین</button>
+                <button type="button" class="primary live-start" id="startLiveBtn" disabled>● شروع تشخیص زنده</button>
+                <button type="button" class="secondary" id="captureBtn" disabled>گرفتن عکس دستی</button>
+                <button type="button" class="ghost danger-text" id="stopLiveBtn" disabled>توقف پایش</button>
+                <button type="button" class="ghost danger-text" id="stopCameraBtn" disabled>خاموش‌کردن دوربین</button>
+              </div>
+              <div class="live-toolbar">
+                <div class="live-state"><span class="live-indicator" id="liveIndicator"></span><strong id="liveStatus">دوربین هنوز فعال نشده</strong></div>
+                <div class="live-controls">
+                  <label>سرعت نمونه‌برداری
+                    <select id="liveDelay">
+                      <option value="0" selected>سریع‌ترین حالت</option>
+                      <option value="120">متعادل</option>
+                      <option value="350">سبک‌تر برای CPU</option>
+                    </select>
+                  </label>
+                  <label>تثبیت OCR
+                    <select id="liveMinHits">
+                      <option value="1">۱ فریم — عبور خیلی سریع</option>
+                      <option value="2" selected>۲ فریم — پیشنهادی</option>
+                      <option value="3">۳ فریم — سخت‌گیرانه</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+              <p class="camera-help"><strong>حالت عبور سریع:</strong> Backend پلاک را بین فریم‌ها Track می‌کند، OCR چند فریم را با هم رأی‌گیری می‌کند و بهترین فریم از نظر Sharpness را برای مدرک ذخیره می‌کند. اگر خودرو فقط در یک فریم دیده شود، Track پس از خروج خودرو با همان فریم معتبر ثبت می‌شود.</p>
+              <canvas id="cameraCanvas" hidden></canvas>
+            </div>
+
+            <div class="preview-wrap hidden" id="previewWrap">
+              <div class="preview-header"><strong>پیش‌نمایش</strong><button class="text-btn danger-text" id="clearImageBtn" type="button">حذف تصویر</button></div>
+              <img id="previewImage" alt="پیش‌نمایش تصویر انتخاب‌شده" />
+            </div>
+
+            <div class="recognize-options">
+              <label class="range-row">
+                <span><strong>حساسیت Detector</strong><small>حداقل confidence برای تشخیص پلاک</small></span>
+                <span class="range-control"><output id="confValue">0.25</output><input id="confRange" type="range" min="0.05" max="0.90" step="0.05" value="0.25" /></span>
+              </label>
+              <label class="switch-row">
+                <span><strong>پذیرش پلاک کنار لبه تصویر</strong><small>برای کاهش ثبت پلاک ناقص، خاموش بماند.</small></span>
+                <input id="allowEdge" type="checkbox" />
+              </label>
+            </div>
+
+            <button class="primary full" id="recognizeBtn" type="button" disabled>
+              <span id="recognizeBtnText">تشخیص پلاک</span>
+              <span class="spinner hidden" id="recognizeSpinner"></span>
+            </button>
+          </article>
+
+          <article class="panel result-panel">
+            <div class="panel-header">
+              <div><p class="eyebrow">خروجی مدل</p><h2>نتیجه تشخیص</h2></div>
+              <span class="result-status neutral" id="resultStatus">آماده</span>
+            </div>
+
+            <div class="result-empty" id="resultEmpty">
+              <div class="result-empty-icon">▣</div>
+              <strong>هنوز تصویری پردازش نشده</strong>
+              <p>بعد از اجرای تشخیص، تصویر Annotated و پلاک‌های خوانده‌شده اینجا نمایش داده می‌شوند.</p>
+            </div>
+
+            <div class="result-content hidden" id="resultContent">
+              <div class="annotated-frame" id="annotatedFrame"><img id="annotatedImage" alt="تصویر پردازش‌شده با محل پلاک" /></div>
+              <div class="result-summary" id="resultSummary"></div>
+              <div class="plate-results" id="plateResults"></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+
+      <section class="view" id="view-video">
+        <div class="video-layout">
+          <article class="panel">
+            <div class="panel-header">
+              <div><p class="eyebrow">پردازش چندفریمی</p><h2>آپلود ویدیو</h2></div>
+              <span class="badge subtle">MP4 / MOV / AVI / MKV</span>
+            </div>
+            <label class="drop-zone video-drop" id="videoDropZone">
+              <input id="videoInput" type="file" accept="video/*,.mp4,.mov,.avi,.mkv,.m4v,.webm" hidden />
+              <span class="upload-mark">▶</span>
+              <strong id="videoFileLabel">ویدیو را انتخاب یا اینجا رها کن</strong>
+              <span>خودروها در چند فریم Track می‌شوند و بهترین فریم ذخیره می‌شود</span>
+              <small id="videoLimitLabel">حداکثر حجم از Backend خوانده می‌شود</small>
+            </label>
+            <div class="video-options">
+              <label><span>فریم نمونه در ثانیه</span><select id="videoSampleFps"><option value="3">۳ FPS</option><option value="5" selected>۵ FPS — پیشنهادی</option><option value="8">۸ FPS</option><option value="10">۱۰ FPS</option></select></label>
+              <label><span>حداقل فریم معتبر</span><select id="videoMinHits"><option value="1">۱ — خودرو خیلی سریع</option><option value="2" selected>۲ — پیشنهادی</option><option value="3">۳ — مطمئن‌تر</option></select></label>
+            </div>
+            <button class="primary full" id="processVideoBtn" type="button" disabled>شروع پردازش ویدیو</button>
+            <div class="video-progress hidden" id="videoProgressWrap">
+              <div class="video-progress-head"><strong id="videoJobStatus">در صف پردازش</strong><span id="videoProgressText">۰٪</span></div>
+              <div class="progress-track"><i id="videoProgressBar"></i></div>
+              <div class="video-job-meta" id="videoJobMeta"></div>
+            </div>
+          </article>
+          <article class="panel">
+            <div class="panel-header"><div><p class="eyebrow">نتایج ویدیو</p><h2>پلاک‌های ثبت‌شده</h2></div></div>
+            <div id="videoResults" class="video-results"><div class="empty-state">هنوز ویدیویی پردازش نشده است.</div></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-history">
+        <article class="panel">
+          <div class="panel-header">
+            <div><p class="eyebrow">دیتابیس محلی</p><h2>سوابق تشخیص</h2></div>
+            <button class="secondary small" id="refreshHistoryBtn" type="button">↻ بروزرسانی</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>پلاک</th><th>شهر / استان</th><th>زمان</th><th>منبع</th><th>Confidence</th><th>تصویر پلاک</th><th>جزئیات</th><th>حذف</th></tr></thead>
+              <tbody id="historyBody"><tr><td colspan="8" class="empty-cell">در حال دریافت...</td></tr></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="view" id="view-search">
+        <article class="panel search-panel">
+          <div class="panel-header">
+            <div><p class="eyebrow">جستجو در دیتابیس</p><h2>پیدا کردن پلاک</h2></div>
+          </div>
+          <form class="search-form" id="searchForm">
+            <input id="searchInput" type="search" autocomplete="off" placeholder="مثلاً 18ق26744 یا 267" />
+            <button class="primary" type="submit">جستجو</button>
+          </form>
+          <p class="form-hint">شماره کامل یا بخشی از پلاک قابل جستجو است.</p>
+          <div class="search-results" id="searchResults"><div class="empty-state">عبارت جستجو را وارد کن.</div></div>
+        </article>
+      </section>
+
+      <section class="view" id="view-settings">
+        <div class="settings-grid">
+          <article class="panel">
+            <div class="panel-header"><div><p class="eyebrow">Runtime</p><h2>وضعیت سیستم</h2></div></div>
+            <div class="kv-list" id="healthDetails"><div class="empty-state">در حال دریافت...</div></div>
+          </article>
+          <article class="panel">
+            <div class="panel-header"><div><p class="eyebrow">دیتابیس</p><h2>پشتیبان‌گیری و پاک‌سازی</h2></div></div>
+            <div class="db-actions">
+              <a class="secondary db-action-link" href="/api/database/backup">دانلود Backup دیتابیس</a>
+              <button class="ghost danger-text db-danger" id="clearDatabaseBtn" type="button">حذف تمام سوابق دیتابیس</button>
+            </div>
+            <p class="camera-help">برای حذف تکی، در صفحه «سوابق» یک رویداد را حذف کن یا در «جستجو» کل سابقه یک پلاک را پاک کن. حذف کامل فقط پس از تأیید دوباره انجام می‌شود.</p>
+          </article>
+          <article class="panel about-panel">
+            <div class="panel-header"><div><p class="eyebrow">Open Source</p><h2>درباره Pelak-Khan</h2></div></div>
+            <div class="about-project">
+              <div class="about-logo">PK</div>
+              <div>
+                <strong>Pelak-Khan</strong>
+                <p>سامانه تشخیص و مدیریت پلاک ایرانی؛ توسعه‌یافته توسط <a href="https://github.com/mofaegh" target="_blank" rel="noopener noreferrer">@mofaegh</a>.</p>
+              </div>
+            </div>
+            <div class="about-links">
+              <a class="secondary about-link" href="https://github.com/mofaegh/pelak-khan" target="_blank" rel="noopener noreferrer">مشاهده مخزن پروژه در GitHub ↗</a>
+              <a class="ghost about-link" href="https://github.com/mofaegh" target="_blank" rel="noopener noreferrer">پروفایل GitHub توسعه‌دهنده ↗</a>
+            </div>
+          </article>
+          <article class="panel">
+            <div class="panel-header"><div><p class="eyebrow">راهنما</p><h2>تنظیمات تشخیص</h2></div></div>
+            <div class="info-block">
+              <strong>Detection confidence</strong>
+              <p>مقدار پایین‌تر حساس‌تر است و Detection بیشتری می‌دهد؛ مقدار بالاتر سخت‌گیرانه‌تر است.</p>
+            </div>
+            <div class="info-block">
+              <strong>Edge validation</strong>
+              <p>در حالت معمول پلاک چسبیده به لبه تصویر Reject می‌شود تا پلاک ناقص وارد دیتابیس نشود.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="mobile-nav" aria-label="ناوبری موبایل">
+    <button class="mobile-nav-item active" data-view="dashboard"><span>⌂</span><small>خانه</small></button>
+    <button class="mobile-nav-item" data-view="recognize"><span>◎</span><small>تشخیص</small></button>
+    <button class="mobile-nav-item" data-view="video"><span>▶</span><small>ویدیو</small></button>
+    <button class="mobile-nav-item" data-view="history"><span>↺</span><small>سوابق</small></button>
+    <button class="mobile-nav-item" data-view="search"><span>⌕</span><small>جستجو</small></button>
+  </nav>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-﻿# ==========================================
+# ==========================================
 # Python
 # ==========================================
 
@@ -87,3 +87,79 @@ temp/
 *.tmp
 
 datasets_generated/
+
+# ==========================================
+# Release / packaging outputs
+# ==========================================
+build-output/
+dist/
+release/
+
+# Local runtime / development data
+data/
+test_images/
+model_trained/
+pelak_runtime_export/
+pelak_runtime_export.zip
+
+# ==========================================
+# Pelak-Khan generated / local files
+# ==========================================
+
+# Python generated
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment
+.env
+.env.local
+!.env.example
+
+# Runtime user data
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# AI models / training
+*.pt
+*.pth
+*.onnx
+*.engine
+*.torchscript
+
+model_trained/
+artifacts/
+test_images/
+pelak_runtime_export/
+pelak_runtime_export*.zip
+
+# Portable/build outputs
+dist/
+release/
+build-output/
+
+# Temporary development patches
+pelak-khan-step*.zip
+pelak-khan-step*/
+
+STEP*_README_FA.md
+STEP*_FIX_FA.md
+STEP*_GITHUB_BRANDING_FA.md
+STEP*_FINAL_PORTABLE_FA.md
+
+# Logs / temporary
+*.log
+logs/
+tmp/
+temp/
+*.tmp
