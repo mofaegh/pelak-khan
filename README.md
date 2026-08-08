@@ -102,6 +102,110 @@ API documentation is available at:
 http://127.0.0.1:8000/docs
 ```
 
+## Quick Inference on a Single Image
+
+Pelak-Khan can run the complete ALPR pipeline on a single vehicle image using the trained detector and OCR weights.
+
+### Required model files
+
+Place the runtime model weights at:
+
+```text
+models/runtime/detector_v1.pt
+models/runtime/ocr_v1.pt
+```
+
+Model weights are intentionally excluded from normal Git history.
+
+> The Windows Portable release already includes the runtime models required by the application. Source-code users must provide the model weights under `models/runtime/`.
+
+### Run inference
+
+From the repository root, run:
+
+```powershell
+python scripts\12_alpr_image_validated.py `
+  --source ".\test_images\test_car.jpg" `
+  --detector ".\models\runtime\detector_v1.pt" `
+  --ocr ".\models\runtime\ocr_v1.pt" `
+  --device cpu `
+  --name demo
+```
+
+Replace:
+
+```text
+.\test_images\test_car.jpg
+```
+
+with the path to your own vehicle image.
+
+### Inference pipeline
+
+```text
+Vehicle image
+    |
+    v
+Plate detection
+    |
+    v
+Plate crop
+    |
+    v
+Persian OCR
+    |
+    v
+Plate validation
+    |
+    v
+Results
+```
+
+Example console output:
+
+```text
+plate#1: '18ق26744' -> ACCEPTED
+```
+
+### Inference outputs
+
+Results are written to:
+
+```text
+artifacts/inference/alpr_image_v2/demo/
+```
+
+The output directory may contain:
+
+```text
+results.csv
+results.json
+accepted.csv
+rejected.csv
+crops/
+annotated/
+```
+
+- `results.json` — structured inference results
+- `results.csv` — tabular inference results
+- `accepted.csv` — plates that passed validation
+- `rejected.csv` — rejected or incomplete detections
+- `crops/` — cropped plate images
+- `annotated/` — original images with detected plate bounding boxes
+
+### Save inference results to SQLite
+
+The generated results can also be imported into the local Pelak-Khan database:
+
+```powershell
+python scripts\13_ingest_alpr_sqlite.py `
+  --results ".\artifacts\inference\alpr_image_v2\demo\results.json" `
+  --db ".\data\pelak_khan.db"
+```
+
+
+
+
 ## Main API
 
 ### Health check
